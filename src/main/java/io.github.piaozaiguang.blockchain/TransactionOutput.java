@@ -1,14 +1,13 @@
-package cn.merryyou.blockchain;
+package io.github.piaozaiguang.blockchain;
 
-import cn.merryyou.blockchain.utils.StringUtil;
+import io.github.piaozaiguang.blockchain.utils.StringUtil;
 
 import java.security.PublicKey;
 
 /**
- * Created on 2018/3/10 0010.
+ * Created on 2018/5/16.
  *
- * @author zlf
- * @email i@merryyou.cn
+ * @author piaozaiguang
  * @since 1.0
  */
 public class TransactionOutput {

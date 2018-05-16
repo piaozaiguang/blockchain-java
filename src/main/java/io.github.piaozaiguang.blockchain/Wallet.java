@@ -1,4 +1,4 @@
-package cn.merryyou.blockchain;
+package io.github.piaozaiguang.blockchain;
 
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
@@ -7,10 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created on 2018/3/10 0010.
+ * Created on 2018/5/16.
  *
- * @author zlf
- * @email i@merryyou.cn
+ * @author piaozaiguang
  * @since 1.0
  */
 public class Wallet {

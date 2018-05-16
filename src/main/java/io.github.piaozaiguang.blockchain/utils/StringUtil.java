@@ -1,6 +1,6 @@
-package cn.merryyou.blockchain.utils;
+package io.github.piaozaiguang.blockchain.utils;
 
-import cn.merryyou.blockchain.Transaction;
+import io.github.piaozaiguang.blockchain.Transaction;
 import com.google.gson.GsonBuilder;
 
 import java.security.*;
@@ -9,11 +9,9 @@ import java.util.Base64;
 import java.util.List;
 
 /**
- * 生成电子签名的工具类
- * Created on 2018/3/10 0010.
+ * Created on 2018/5/16.
  *
- * @author zlf
- * @email i@merryyou.cn
+ * @author piaozaiguang
  * @since 1.0
  */
 public class StringUtil {

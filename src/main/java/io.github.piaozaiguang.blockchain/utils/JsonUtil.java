@@ -1,12 +1,12 @@
-package cn.merryyou.blockchain.util;
+package io.github.piaozaiguang.blockchain.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Created on 2018/1/17.
+ * Created on 2018/5/16.
  *
- * @author zlf
+ * @author piaozaiguang
  * @since 1.0
  */
 public class JsonUtil {
