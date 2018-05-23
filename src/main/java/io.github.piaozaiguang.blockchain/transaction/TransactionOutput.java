@@ -2,8 +2,8 @@ package io.github.piaozaiguang.blockchain.transaction;
 
 import java.security.PublicKey;
 
-import io.github.piaozaiguang.blockchain.utils.HashUtil;
-import io.github.piaozaiguang.blockchain.utils.StringUtil;
+import io.github.piaozaiguang.blockchain.support.utils.HashUtil;
+import io.github.piaozaiguang.blockchain.support.utils.StringUtil;
 
 /**
  * Created on 2018/5/16.
@@ -13,19 +13,19 @@ import io.github.piaozaiguang.blockchain.utils.StringUtil;
  */
 public class TransactionOutput {
 
-    public String id;
+    private String id;
     /**
      * also known as the new owner of these coins.
      */
-    public PublicKey recipient;
+    private PublicKey recipient;
     /**
      * the amount of coins they own
      */
-    public float value;
+    private float value;
     /**
      * the id of the transaction this output was created in
      */
-    public String parentTransactionId;
+    private String parentTransactionId;
 
     /**
      * Constructor
@@ -38,6 +38,18 @@ public class TransactionOutput {
         this.value = value;
         this.parentTransactionId = parentTransactionId;
         this.id = HashUtil.applySha256(StringUtil.base64Encoding(recipient) + Float.toString(value) + parentTransactionId);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public PublicKey getRecipient() {
+        return recipient;
+    }
+
+    public float getValue() {
+        return value;
     }
 
     /**

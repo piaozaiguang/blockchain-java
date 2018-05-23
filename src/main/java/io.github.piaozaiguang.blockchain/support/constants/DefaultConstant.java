@@ -1,4 +1,4 @@
-package io.github.piaozaiguang.blockchain.constants;
+package io.github.piaozaiguang.blockchain.support.constants;
 
 /**
  * Created on 2018/5/16.

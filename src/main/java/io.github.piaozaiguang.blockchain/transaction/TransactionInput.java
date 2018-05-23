@@ -10,13 +10,29 @@ public class TransactionInput {
     /**
      * Reference to TransactionOutputs -> transactionId
      */
-    public String transactionOutputId;
+    private String transactionOutputId;
     /**
      * Contains the Unspent transaction output
      */
-    public TransactionOutput UTXO;
+    private TransactionOutput UTXO;
 
+    /**
+     * Constructor
+     * @param transactionOutputId
+     */
     public TransactionInput(String transactionOutputId) {
         this.transactionOutputId = transactionOutputId;
+    }
+
+    public String getTransactionOutputId() {
+        return transactionOutputId;
+    }
+
+    public TransactionOutput getUTXO() {
+        return UTXO;
+    }
+
+    public void setUTXO(TransactionOutput UTXO) {
+        this.UTXO = UTXO;
     }
 }

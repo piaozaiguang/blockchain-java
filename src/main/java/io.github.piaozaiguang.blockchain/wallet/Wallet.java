@@ -5,13 +5,14 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.github.piaozaiguang.blockchain.chain.Chain;
+import io.github.piaozaiguang.blockchain.support.utils.KeyPairUtil;
 import io.github.piaozaiguang.blockchain.transaction.Transaction;
 import io.github.piaozaiguang.blockchain.transaction.TransactionInput;
 import io.github.piaozaiguang.blockchain.transaction.TransactionOutput;
-import io.github.piaozaiguang.blockchain.utils.KeyPairUtil;
 
 /**
  * Created on 2018/5/16.
@@ -21,16 +22,23 @@ import io.github.piaozaiguang.blockchain.utils.KeyPairUtil;
  */
 public class Wallet {
 
-    public PrivateKey privateKey;
-    public PublicKey publicKey;
-
-    public HashMap<String,TransactionOutput> UTXOs = new HashMap<>();
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
+    private Map<String,TransactionOutput> UTXOs = new HashMap<>();
 
     public Wallet() {
         KeyPair keyPair = KeyPairUtil.generate();
         // Set the public and private keys from the keyPair
         privateKey = keyPair.getPrivate();
         publicKey = keyPair.getPublic();
+    }
+
+    public PrivateKey getPrivateKey() {
+        return privateKey;
+    }
+
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 
     public float getBalance() {
@@ -40,8 +48,8 @@ public class Wallet {
             //if output belongs to me ( if coins belong to me )
             if(UTXO.isMine(publicKey)) {
                 //add it to our list of unspent transactions.
-                UTXOs.put(UTXO.id,UTXO);
-                total += UTXO.value;
+                UTXOs.put(UTXO.getId(),UTXO);
+                total += UTXO.getValue();
             }
         }
         return total;
@@ -52,13 +60,13 @@ public class Wallet {
             System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
             return null;
         }
-        ArrayList<TransactionInput> inputs = new ArrayList<>();
+        List<TransactionInput> inputs = new ArrayList<>();
 
         float total = 0;
         for (Map.Entry<String, TransactionOutput> item: UTXOs.entrySet()){
             TransactionOutput UTXO = item.getValue();
-            total += UTXO.value;
-            inputs.add(new TransactionInput(UTXO.id));
+            total += UTXO.getValue();
+            inputs.add(new TransactionInput(UTXO.getId()));
             if (total > value) {
                 break;
             }
@@ -68,7 +76,7 @@ public class Wallet {
         newTransaction.generateSignature(privateKey);
 
         for(TransactionInput input: inputs){
-            UTXOs.remove(input.transactionOutputId);
+            UTXOs.remove(input.getTransactionOutputId());
         }
 
         return newTransaction;

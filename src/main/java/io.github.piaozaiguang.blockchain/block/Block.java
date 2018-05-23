@@ -1,11 +1,12 @@
 package io.github.piaozaiguang.blockchain.block;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import io.github.piaozaiguang.blockchain.support.utils.HashUtil;
+import io.github.piaozaiguang.blockchain.support.utils.MerkleRootUtil;
+import io.github.piaozaiguang.blockchain.support.utils.StringUtil;
 import io.github.piaozaiguang.blockchain.transaction.Transaction;
-import io.github.piaozaiguang.blockchain.utils.HashUtil;
-import io.github.piaozaiguang.blockchain.utils.MerkleRootUtil;
-import io.github.piaozaiguang.blockchain.utils.StringUtil;
 
 /**
  * Created on 2018/5/16.
@@ -14,18 +15,18 @@ import io.github.piaozaiguang.blockchain.utils.StringUtil;
  * @since 1.0
  */
 public class Block {
-    public String hash;
-    public String previousHash;
-    public String merkleRoot;
+    private String hash;
+    private String previousHash;
+    private String merkleRoot;
     /**
      * our data will be a simple message.
      */
-    public ArrayList<Transaction> transactions = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
     /**
      * as number of milliseconds since 1/1/1970.
      */
-    public long timeStamp;
-    public int nonce;
+    private long timeStamp;
+    private int nonce;
 
     /**
      * Block Constructor.
@@ -36,6 +37,18 @@ public class Block {
         this.timeStamp = System.currentTimeMillis();
         // Making sure we do this after we set the other values.
         this.hash = calculateHash();
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public String getPreviousHash() {
+        return previousHash;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     /**
@@ -51,7 +64,11 @@ public class Block {
      * @param difficulty
      */
     public void mineBlock(int difficulty) {
-        merkleRoot = MerkleRootUtil.getMerkleRoot(transactions);
+        List<String> transactionIds = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            transactionIds.add(transaction.getTransactionId());
+        }
+        merkleRoot = MerkleRootUtil.getMerkleRoot(transactionIds);
         // Create a string with difficulty * "0"
         String target = StringUtil.getDifficultyString(difficulty);
         while (!hash.substring(0, difficulty).equals(target)) {

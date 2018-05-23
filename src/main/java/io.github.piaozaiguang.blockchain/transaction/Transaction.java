@@ -1,15 +1,16 @@
 package io.github.piaozaiguang.blockchain.transaction;
 
-import static io.github.piaozaiguang.blockchain.constants.DefaultConstant.MINIMUM_TRANSACTION;
+import static io.github.piaozaiguang.blockchain.support.constants.DefaultConstant.MINIMUM_TRANSACTION;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.github.piaozaiguang.blockchain.chain.Chain;
-import io.github.piaozaiguang.blockchain.utils.HashUtil;
-import io.github.piaozaiguang.blockchain.utils.SignatureUtil;
-import io.github.piaozaiguang.blockchain.utils.StringUtil;
+import io.github.piaozaiguang.blockchain.support.utils.HashUtil;
+import io.github.piaozaiguang.blockchain.support.utils.SignatureUtil;
+import io.github.piaozaiguang.blockchain.support.utils.StringUtil;
 
 /**
  * Created on 2018/5/16.
@@ -22,26 +23,26 @@ public class Transaction {
     /**
      * Contains a hash of transaction*
      */
-    public String transactionId;
+    private String transactionId;
     /**
      * Senders address/public key.
      */
-    public PublicKey sender;
+    private PublicKey sender;
     /**
      * Recipients address/public key.
      */
-    public PublicKey recipient;
+    private PublicKey recipient;
     /**
      * Contains the amount we wish to send to the recipient.
      */
-    public float value;
+    private float value;
     /**
      * This is to prevent anybody else from spending funds in our wallet.
      */
-    public byte[] signature;
+    private byte[] signature;
 
-    public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
-    public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
+    private List<TransactionInput> inputs = new ArrayList<>();
+    private List<TransactionOutput> outputs = new ArrayList<>();
 
     /**
      * A rough count of how many transactions have been generated
@@ -55,11 +56,43 @@ public class Transaction {
      * @param value
      * @param inputs
      */
-    public Transaction(PublicKey from, PublicKey to, float value,  ArrayList<TransactionInput> inputs) {
+    public Transaction(PublicKey from, PublicKey to, float value,  List<TransactionInput> inputs) {
         this.sender = from;
         this.recipient = to;
         this.value = value;
         this.inputs = inputs;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public PublicKey getSender() {
+        return sender;
+    }
+
+    public PublicKey getRecipient() {
+        return recipient;
+    }
+
+    public float getValue() {
+        return value;
+    }
+
+    public List<TransactionInput> getInputs() {
+        return inputs;
+    }
+
+    public List<TransactionOutput> getOutputs() {
+        return outputs;
+    }
+
+    public void addOutput(TransactionOutput output) {
+        outputs.add(output);
     }
 
     public boolean processTransaction() {
@@ -71,7 +104,7 @@ public class Transaction {
 
         // Gathers transaction inputs (Making sure they are unspent):
         for(TransactionInput i : inputs) {
-            i.UTXO = Chain.UTXOs.get(i.transactionOutputId);
+            i.setUTXO(Chain.UTXOs.get(i.getTransactionOutputId()));
         }
 
         // Checks if transaction is valid:
@@ -85,22 +118,22 @@ public class Transaction {
         float leftOver = getInputsValue() - value;
         transactionId = calculateHash();
         // send value to recipient
-        outputs.add(new TransactionOutput( this.recipient, value,transactionId));
+        outputs.add(new TransactionOutput( this.recipient, value, transactionId));
         // send the left over 'change' back to sender
-        outputs.add(new TransactionOutput( this.sender, leftOver,transactionId));
+        outputs.add(new TransactionOutput( this.sender, leftOver, transactionId));
 
         // Add outputs to Unspent list
         for(TransactionOutput o : outputs) {
-            Chain.UTXOs.put(o.id, o);
+            Chain.UTXOs.put(o.getId(), o);
         }
 
         // Remove transaction inputs from UTXO lists as spent:
         for(TransactionInput i : inputs) {
-            if (i.UTXO == null) {
+            if (i.getUTXO() == null) {
                 // if Transaction can't be found skip it
                 continue;
             }
-            Chain.UTXOs.remove(i.UTXO.id);
+            Chain.UTXOs.remove(i.getUTXO().getId());
         }
 
         return true;
@@ -109,11 +142,11 @@ public class Transaction {
     public float getInputsValue() {
         float total = 0;
         for(TransactionInput i : inputs) {
-            if (i.UTXO == null) {
+            if (i.getUTXO() == null) {
                 // if Transaction can't be found skip it, This behavior may not be optimal.
                 continue;
             }
-            total += i.UTXO.value;
+            total += i.getUTXO().getValue();
         }
         return total;
     }
@@ -131,7 +164,7 @@ public class Transaction {
     public float getOutputsValue() {
         float total = 0;
         for (TransactionOutput o : outputs) {
-            total += o.value;
+            total += o.getValue();
         }
         return total;
     }
